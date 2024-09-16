@@ -3,7 +3,6 @@ from pendulum import datetime
 import os
 import duckdb
 
-
 ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
@@ -17,14 +16,55 @@ SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     tags=["airbyte", "aws", "dbt"],
 )
 def extract_load():
+    """
+    Função principal que coordena o processo de extração e carregamento de dados.
 
+    - Lista os arquivos CSV no diretório especificado.
+    - Para cada arquivo CSV, executa a extração, processamento e carregamento dos dados em lotes.
+    - Os dados processados são convertidos para o formato Parquet e carregados em um bucket S3.
+
+    A função utiliza a função interna `source()` para obter a lista de arquivos e a função interna `extract()`
+    para processar e carregar cada arquivo individualmente.
+    """
+
+    
+    def source():
+        """
+        Obtém a lista de arquivos CSV disponíveis no diretório de dados.
+
+        - Verifica o diretório especificado e lista os arquivos encontrados.
+
+        Returns:
+            list: Lista de nomes de arquivos CSV encontrados no diretório.
+        """
+        
+        data_path = '/usr/local/airflow/include/sc'
+        files = [f for f in os.listdir(data_path) if os.path.isfile(os.path.join(data_path, f))]
+        print(f"Arquivos encontrados: {files}")
+        return files
+    
+    
     @task
     def extract(file_path):
+
+        """
+        Extrai e carrega dados do arquivo CSV especificado para um bucket S3.
+
+        - Conecta ao banco de dados DuckDB.
+        - Cria uma tabela temporária a partir do arquivo CSV.
+        - Conta o número total de linhas no arquivo CSV e divide o processamento em lotes.
+        - Para cada lote, lê os dados, converte para o formato Parquet e carrega no bucket S3.
+
+        Args:
+            file_path (str): O caminho relativo para o arquivo CSV a ser processado.
+        """
+
+        
         con = duckdb.connect()
 
-        # Crie um cursor para execução das consultas
         data_path = '/usr/local/airflow/include/sc'
         full_path = f"{data_path}/{file_path}"
+        
         # Contar o número total de linhas no CSV
         query = f"""
         CREATE OR REPLACE TEMPORARY TABLE temp_table AS
@@ -35,7 +75,7 @@ def extract_load():
 
         total_linhas = con.execute("SELECT COUNT(*) FROM temp_table").fetchone()[0]
         print(f'Total de linhas no CSV: {total_linhas}')
-        #return total_linhas
+
         tamanho_batch = total_linhas / 10
 
         file_name = file_path.replace('.csv', '')
@@ -62,13 +102,6 @@ def extract_load():
             cursor.execute(query)
             print(f"Arquivo {y} adicionado ao bucket.")
             con.close()
-
-
-    def source():
-        data_path = '/usr/local/airflow/include/sc'
-        files = [f for f in os.listdir(data_path) if os.path.isfile(os.path.join(data_path, f))]
-        print(f"Arquivos encontrados: {files}")
-        return files
 
     data_source = source()
     for file_path in data_source[1:]:
