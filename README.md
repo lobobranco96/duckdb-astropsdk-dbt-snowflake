@@ -8,6 +8,8 @@ FONTE DE DADOS:
 
 Este projeto demonstra uma pipeline de dados utilizando tecnologias modernas de engenharia de dados. O fluxo de trabalho abrange desde a extração e armazenamento de dados brutos até a transformação e análise dos dados no Snowflake. As tecnologias utilizadas incluem o Astro Python SDK para Apache Airflow, DuckDB, DBT e Snowflake.
 
+![arquitetura](https://github.com/user-attachments/assets/8c6ecb96-0b95-4ca7-856d-d510f4614691)
+
 ## Tecnologias Utilizadas
 
 - **Astronomer**: Orquestração e gerenciamento de workflows Airflow.
