@@ -10,3 +10,6 @@ webserver_config.py
 airflow.cfg
 airflow.db
 include/sc/
+dags/testes/
+gmail_conta.txt
+airbyte/
