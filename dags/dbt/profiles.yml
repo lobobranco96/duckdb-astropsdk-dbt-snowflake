@@ -1,0 +1,12 @@
+dbt_project:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: ggb13842.us-east-1
+      user: REMARIANO25
+      password: "@Renato503645snowflake"
+      role: ACCOUNTADMIN
+      database: ENEM_STORAGE
+      warehouse: COMPUTE_WH
+      schema: DATA
