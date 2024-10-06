@@ -34,6 +34,7 @@ Este projeto demonstra uma pipeline de dados utilizando tecnologias modernas de 
 ## Requisitos
 
 - **Python 3.8+**: Para executar scripts Python e instalar pacotes.
+- **Docker**: É importante que para o funcionamento do Duckdb e a finalização da tarefa, é preciso que configure 12GB de memoria ao container.
 - **Astronomer**: Para configurar e gerenciar o Airflow.
 - **DuckDB**: Para conversão de dados.
 - **Astro Python SDK**: Para movimentação e carga de dados.
