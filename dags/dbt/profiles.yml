@@ -3,9 +3,9 @@ dbt_project:
   outputs:
     dev:
       type: snowflake
-      account: ggb13842.us-east-1
-      user: REMARIANO25
-      password: "@Renato503645snowflake"
+      account: <account>.us-east-1
+      user: <login>
+      password: <password>
       role: ACCOUNTADMIN
       database: ENEM_STORAGE
       warehouse: COMPUTE_WH
